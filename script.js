@@ -123,10 +123,12 @@ function ScreenController() {
         let winnerName = game.getWinnerName();
 
         if(!winnerCheck){
-        playerTurnDiv.textContent = `${activePlayer.name}'s turn `
+        playerTurnDiv.textContent = `${activePlayer.name}'s (${activePlayer.token}) turn `
+        playerTurnDiv.classList.add('turn');
         } else {
             playerTurnDiv.textContent = `${winnerName} wins! `
             const resetButton = document.createElement('button');
+            resetButton.classList.add('reset');
             resetButton.textContent='Click to Play again'
             resetButton.addEventListener('click', () => location.reload());
             containerDiv.appendChild(resetButton);
@@ -136,10 +138,15 @@ function ScreenController() {
         row.forEach((cell, columnIndex) => {
             const cellButton = document.createElement('button');
             cellButton.classList.add('cell');
+            cellButton.classList.add('cell-hover')
             cellButton.dataset.column = columnIndex;
             cellButton.dataset.row = rowIndex;
             cellButton.textContent = cell.getValue();
             boardDiv.appendChild(cellButton);
+            
+            if(winnerCheck){
+                cellButton.classList.remove('cell-hover');
+            }
         })
     })
         
