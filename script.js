@@ -67,6 +67,10 @@ function GameController(
         return cells.every(cell => cell.getValue() !== '' && cell.getValue() === cells[0].getValue());
     };
 
+    const tieGameCheck = (board) => {
+        return board.every(row => row.every(cell => cell.getValue() !== ''));
+    }
+
     const playRound = (row, column) => {
         if(!board.selectCell(row, column, getActivePlayer().token)){
         return;
@@ -94,6 +98,12 @@ function GameController(
                 gameWinner = activePlayer.name;
             }
         }
+
+        if(tieGameCheck(board.getBoard())){
+            hasWinner = true;
+            gameWinner = 'Nobody';
+        }
+    
         switchPlayerTurn();
     };
     return{playRound, getActivePlayer, getBoard: board.getBoard, getWinner, getWinnerName};
@@ -115,7 +125,7 @@ function ScreenController() {
         if(!winnerCheck){
         playerTurnDiv.textContent = `${activePlayer.name}'s turn `
         } else {
-            playerTurnDiv.textContent = `${winnerName} wins `
+            playerTurnDiv.textContent = `${winnerName} wins! `
             const resetButton = document.createElement('button');
             resetButton.textContent='Click to Play again'
             resetButton.addEventListener('click', () => location.reload());
