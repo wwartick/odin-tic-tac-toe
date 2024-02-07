@@ -14,13 +14,15 @@ function GameBoard() {
 
     const selectCell = (row, column, player) => {
         const availableCells = board.filter((row) => row[column].getValue() === 0).map(row => row[column]);
-        if(!availableCells.length) return;
+        console.log(availableCells.length)
+        if(!availableCells.length){
+         console.log('YOU CANT DO THIS') 
+         return;}
         board[row][column].addToken(player);
     }
 
     const printBoard = () => {
         const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()));
-        console.log(boardWithCellValues);
     }
 
     return { getBoard, selectCell, printBoard};
@@ -65,7 +67,6 @@ function GameController(
 
     const printNewRound = () => {
         board.printBoard();
-        console.log(`${getActivePlayer().name}'s turn.`);
     };
 
     const playRound = (row, column) => {
@@ -96,11 +97,12 @@ function ScreenController() {
 
     playerTurnDiv.textContent = `${activePlayer.name}'s turn `
 
-    board.forEach(row => {
-        row.forEach((cell, index) => {
+    board.forEach((row,rowIndex) => {
+        row.forEach((cell, columnIndex) => {
             const cellButton = document.createElement('button');
             cellButton.classList.add('cell');
-            cellButton.dataset.column = index;
+            cellButton.dataset.column = columnIndex;
+            cellButton.dataset.row = rowIndex;
             cellButton.textContent = cell.getValue();
             boardDiv.appendChild(cellButton);
         })
@@ -108,10 +110,13 @@ function ScreenController() {
 }
 
     function clickHandlerBoard(e) {
-        const selectedCell = e.target.dataset.cell;
-        if (!selectedCell) return;
+        const selectedCellRow = e.target.dataset.row;
+        const selectedCellColumn = e.target.dataset.column;
+        if (!selectedCellRow || !selectedCellColumn) return;
+        console.log(selectedCellRow,selectedCellColumn);
+  
 
-        game.playRound(selectedCell);
+        game.playRound(selectedCellRow, selectedCellColumn);
         updateScreen();
     }
     boardDiv.addEventListener('click', clickHandlerBoard);
