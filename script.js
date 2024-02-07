@@ -63,11 +63,20 @@ function GameController(
     };
 
     const playRound = (row, column) => {
-       if(!board.selectCell(row, column, getActivePlayer().token)){
+       
+        if(!board.selectCell(row, column, getActivePlayer().token)){
         return;
        }
        //winner logic
-       
+       const centerValue = board.getBoard()[1][1].getValue();
+        if (centerValue !== 0) {
+            const diagonal1 = centerValue === board.getBoard()[0][0].getValue() && centerValue === board.getBoard()[2][2].getValue();
+            const diagonal2 = centerValue === board.getBoard()[2][0].getValue() && centerValue === board.getBoard()[0][2].getValue();
+            if (diagonal1 || diagonal2) {
+            console.log(activePlayer.name + ' wins');
+            }
+        }
+
         for (let i = 0; i < board.getBoard().length; i++) {
             if (checkWinner(board.getBoard()[i])) {
                 console.log(activePlayer.name + ' wins');
