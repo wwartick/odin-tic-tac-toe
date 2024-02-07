@@ -29,9 +29,7 @@ function Cell() {
     const addToken = (player) => {
         value = player;
     };
-
     const getValue = () => value;
-
     return { addToken, getValue};
 }
 
@@ -60,18 +58,30 @@ function GameController(
 
     const getActivePlayer = () => activePlayer;
 
-
+    const checkWinner = (cells) => {
+        return cells.every(cell => cell.getValue() !== 0 && cell.getValue() === cells[0].getValue());
+    };
 
     const playRound = (row, column) => {
        if(!board.selectCell(row, column, getActivePlayer().token)){
         return;
        }
-        //someone wins , it goes here   
+       //winner logic
+       
+        for (let i = 0; i < board.getBoard().length; i++) {
+            if (checkWinner(board.getBoard()[i])) {
+                console.log(activePlayer.name + ' wins');
+            }
+        }
+        
+        for (let j = 0; j < board.getBoard()[0].length; j++) {
+            const column = board.getBoard().map(row => row[j]);
+            if (checkWinner(column)) {
+                console.log(activePlayer.name + ' wins');
+            }
+        }
         switchPlayerTurn();
     };
-
- 
-
     return{playRound, getActivePlayer, getBoard: board.getBoard};
 } 
 
