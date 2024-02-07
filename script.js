@@ -13,19 +13,14 @@ function GameBoard() {
     const getBoard = () => board;
 
     const selectCell = (row, column, player) => {
-        const availableCells = board.filter((row) => row[column].getValue() === 0).map(row => row[column]);
-        console.log(availableCells.length)
-        if(!availableCells.length){
-         console.log('YOU CANT DO THIS') 
-         return;}
+        if(board[row][column].getValue() !== 0){
+         return false;
+        }
         board[row][column].addToken(player);
-    }
+        return true
+    } 
 
-    const printBoard = () => {
-        const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()));
-    }
-
-    return { getBoard, selectCell, printBoard};
+    return { getBoard, selectCell };
 }
 
 function Cell() {
@@ -65,21 +60,17 @@ function GameController(
 
     const getActivePlayer = () => activePlayer;
 
-    const printNewRound = () => {
-        board.printBoard();
-    };
+
 
     const playRound = (row, column) => {
-        console.log(`${getActivePlayer().name} has placed their token at ${row}, ${column}.`)
-        board.selectCell(row, column, getActivePlayer().token);
-
-        //someone wins , it goes here
-        
+       if(!board.selectCell(row, column, getActivePlayer().token)){
+        return;
+       }
+        //someone wins , it goes here   
         switchPlayerTurn();
-        printNewRound();
     };
 
-    printNewRound();
+ 
 
     return{playRound, getActivePlayer, getBoard: board.getBoard};
 } 
@@ -113,9 +104,6 @@ function ScreenController() {
         const selectedCellRow = e.target.dataset.row;
         const selectedCellColumn = e.target.dataset.column;
         if (!selectedCellRow || !selectedCellColumn) return;
-        console.log(selectedCellRow,selectedCellColumn);
-  
-
         game.playRound(selectedCellRow, selectedCellColumn);
         updateScreen();
     }
